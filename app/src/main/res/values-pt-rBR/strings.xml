@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="your_name">Seu nome</string>
+    <string name="user_icon">icone do usuario</string>
+    <string name="your_e_mail">Seu E-mail</string>
+    <string name="email_icon">Icone de Email</string>
+    <string name="your_password">Sua senha</string>
+    <string name="password_icon">Senha icone</string>
+    <string name="sign_up">Cadastrar-se</string>
+    <string name="login">Login</string>
+    <string name="cancel">Cancelar</string>
+    <string name="user_login">User Login</string>
+    <string name="please_sign_in_to_continue">Logue para continuar</string>
+    <string name="first_let_s_create_a_new_account">Primeiro vamos criar uma conta</string>
+</resources>
