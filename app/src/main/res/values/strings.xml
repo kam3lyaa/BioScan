@@ -1,3 +1,16 @@
 <resources>
-    <string name="app_name">BioScan</string>
+    <string name="app_name">BIOSCAN</string>
+    <string name="name">BIOSCAN</string>
+    <string name="your_name">Your name</string>
+    <string name="user_icon">User icon</string>
+    <string name="your_e_mail">Your E-mail</string>
+    <string name="email_icon">Email icon</string>
+    <string name="your_password">Your password</string>
+    <string name="password_icon">Password icon</string>
+    <string name="sign_up">Sign up</string>
+    <string name="login">Login</string>
+    <string name="cancel">Cancel</string>
+    <string name="user_login" translatable="false">User Login</string>
+    <string name="please_sign_in_to_continue">Please sign in to continue</string>
+    <string name="first_let_s_create_a_new_account">First let\'s create a new account</string>
 </resources>
