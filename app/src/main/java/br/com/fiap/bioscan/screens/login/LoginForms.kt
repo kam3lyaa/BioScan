@@ -1,5 +1,6 @@
 package br.com.fiap.bioscan.screens.login
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,11 +38,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -59,6 +58,7 @@ fun LoginForm(navController: NavHostController) {
     var email by remember { mutableStateOf("") }
 
     var password by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
 
     //variavel de instancia
     val userRepository: UserRepository = RoomUserRepository(LocalContext.current)
@@ -95,6 +95,7 @@ fun LoginForm(navController: NavHostController) {
                 focusedBorderColor = MaterialTheme.colorScheme.primary,
                 unfocusedBorderColor = MaterialTheme.colorScheme.primary
             ),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             leadingIcon ={
                 Icon(
                     imageVector = Icons.Default.Email,
@@ -125,6 +126,11 @@ fun LoginForm(navController: NavHostController) {
                 focusedBorderColor = MaterialTheme.colorScheme.primary,
                 unfocusedBorderColor = MaterialTheme.colorScheme.primary
             ),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            visualTransformation = if (passwordVisible)
+                VisualTransformation.None
+            else
+                PasswordVisualTransformation(),
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Password,
@@ -133,31 +139,14 @@ fun LoginForm(navController: NavHostController) {
                 )
             },
             trailingIcon = {
-                val image = if(showPassword){
-                    Icons.Default.Visibility
-                }else{
-                    Icons.Default.VisibilityOff
-                }
-                IconButton(
-                    onClick = {
-                        showPassword = !showPassword
+                Icon(
+                    contentDescription = stringResource(R.string.password_icon),
+                    tint = MaterialTheme.colorScheme.primary,
+                    imageVector = Icons.Default.RemoveRedEye,
+                    modifier = Modifier.clickable {
+                        passwordVisible = !passwordVisible
                     }
-                ) {
-                    Icon(
-                        imageVector = image,
-                        contentDescription = stringResource(R.string.visibility_button),
-                        tint = MaterialTheme.colorScheme.tertiary
-                    )
-                }
-            },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Done
-            ),
-            visualTransformation = if(showPassword){
-                VisualTransformation.None
-            }else{
-                PasswordVisualTransformation()
+                )
             }
 
         )
