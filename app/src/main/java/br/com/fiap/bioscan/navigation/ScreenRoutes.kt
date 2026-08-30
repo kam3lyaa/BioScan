@@ -9,5 +9,13 @@ sealed class Destination(val route:  String){
 
     object LoginScreen: Destination(route = "login")
 
-    object HomeScreen: Destination(route = "home")
+    object HomeScreen: Destination(route = "home") {
+        fun createRoute(email: String) {}
+    }
+
+    object UpdateScreen: Destination(route = "update/{email}"){
+        fun createRoute(email: String): String{
+            return "update/$email"
+        }
+    }
 }

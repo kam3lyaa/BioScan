@@ -1,5 +1,6 @@
-package br.com.fiap.bioscan.screens.singup
+package br.com.fiap.bioscan.screens.profile
 
+import android.R
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -30,19 +31,18 @@ import androidx.compose.ui.tooling.preview.AndroidUiModes.UI_MODE_NIGHT_YES
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import br.com.fiap.bioscan.screens.initial.components.BottomEndCard
 import br.com.fiap.bioscan.ui.theme.BioScanTheme
 
 @Composable
-fun SignupScreen(navController: NavController) {
+fun UpdateScreen(navController: NavController, userEmail: String?) {
     val context = LocalContext.current
 
     //Criar uma variável que amazarnará a imagem do perfil
     val placeholderImage = BitmapFactory.decodeResource(
         Resources.getSystem(),
-        android.R.drawable.ic_menu_gallery
+        R.drawable.ic_menu_gallery
     )
 
     //Armazenando a imagem do perfil numa variável do tipo bitmap
@@ -88,12 +88,12 @@ fun SignupScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally
 
         ) {
-            TextComponent()
+            ProfileTextComponent()
             Spacer(modifier = Modifier.height(30.dp))
-            UserImage(profileImage,launcher)
+            ProfileUserImage(profileImage,launcher)
             Spacer(modifier = Modifier.height(10.dp))
 
-            SignupForms(navController, profileImage)
+            ProfileUserForms(navController, profileImage, userEmail)
 
         }
     }
@@ -107,7 +107,7 @@ fun SignupScreen(navController: NavController) {
 @Composable
 private fun SignupScreenPreview(){
     BioScanTheme {
-        SignupScreen(rememberNavController())
+        UpdateScreen(rememberNavController(), "")
     }
 }
 

@@ -18,7 +18,7 @@ import br.com.fiap.bioscan.ui.theme.BioScanTheme
 @Composable
 fun LogoImage(modifier: Modifier = Modifier) {
     Box(
-        modifier = Modifier.size(250.dp)
+        modifier = modifier.size(250.dp)
     )
     {
         Image(

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PersonOutline
 import androidx.compose.material3.Icon
@@ -18,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.fiap.bioscan.R
+import br.com.fiap.bioscan.screens.initial.components.LogoImage
 import br.com.fiap.bioscan.ui.theme.BioScanTheme
 
 
@@ -27,15 +29,11 @@ fun TextComponent() {
         modifier = Modifier
             .padding(10.dp)
             .fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.Start
     ) {
-        Icon(
-            imageVector = Icons.Default.PersonOutline,
-            contentDescription = stringResource(R.string.user_icon),
-            Modifier.size(100.dp),
-            tint = MaterialTheme.colorScheme.primary
-        )
 
+
+        Spacer(modifier = Modifier.height(8.dp))
 
         Text(
             text= stringResource(R.string.user_login),

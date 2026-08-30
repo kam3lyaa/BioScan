@@ -1,6 +1,7 @@
-package br.com.fiap.bioscan.screens.singup
+package br.com.fiap.bioscan.screens.profile
 
-import androidx.compose.foundation.clickable
+import android.graphics.Bitmap
+import android.util.Patterns
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,32 +35,54 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.AndroidUiModes.UI_MODE_NIGHT_NO
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import br.com.fiap.bioscan.R
 import br.com.fiap.bioscan.model.User
 import br.com.fiap.bioscan.navigation.Destination
 import br.com.fiap.bioscan.repository.RoomUserRepository
-import br.com.fiap.bioscan.repository.UserRepository
-import br.com.fiap.bioscan.repository.UserSharedPreferencesRepository
 import br.com.fiap.bioscan.ui.theme.BioScanTheme
 import br.com.fiap.bioscan.utils.convertBitmapToByteArray
 
 @Composable
-fun SignupForms(navController: NavController, profileImage: Bitmap) {
+fun ProfileUserForms(navController: NavController, profileImage: Bitmap, userEmail: String?) {
+    //instância da classe SheredPreferencesUserRepository
+    val userRepository = RoomUserRepository(LocalContext.current)
+    var user = userRepository.getUserByEmail(userEmail!!)
+
 
     //variáveis de estado
-    var name by remember { mutableStateOf("")}
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var passwordVisible by remember { mutableStateOf(false) }
+    var name by remember { mutableStateOf(user!!.name)}
+    var email by remember { mutableStateOf(user!!.email) }
+    var password by remember { mutableStateOf(user!!.password) }
+
+
+    //variaveis de estado para verificar se os dados estão corretos
+    var isNameError by remember { mutableStateOf(false) }
+    var isEmailError by remember { mutableStateOf(false) }
+    var isPasswordError by remember { mutableStateOf(false) }
+
+    //Variável de estado para caixa de diálogo
+    var showDialogSuccess by remember { mutableStateOf(false) }
+    var showDialogError by remember { mutableStateOf(false) }
+
+    //Função de validação dos Dados digitados
+    fun validate(): Boolean {
+        isNameError = name.length < 3
+        isEmailError = email.length < 3 || !Patterns.EMAIL_ADDRESS.matcher(email).matches()
+        isPasswordError = password.length < 3
+
+        return !isNameError && !isEmailError && !isPasswordError
+    }
+
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
 
     Column(
         modifier = Modifier
@@ -143,7 +166,6 @@ fun SignupForms(navController: NavController, profileImage: Bitmap) {
                 focusedBorderColor = MaterialTheme.colorScheme.primary,
                 unfocusedBorderColor = MaterialTheme.colorScheme.primary
             ),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             leadingIcon ={
                 Icon(
                     imageVector = Icons.Default.Email,
@@ -196,11 +218,6 @@ fun SignupForms(navController: NavController, profileImage: Bitmap) {
                 focusedBorderColor = MaterialTheme.colorScheme.primary,
                 unfocusedBorderColor = MaterialTheme.colorScheme.primary
             ),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            visualTransformation = if (passwordVisible)
-                VisualTransformation.None
-            else
-                PasswordVisualTransformation(),
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Password,
@@ -214,14 +231,24 @@ fun SignupForms(navController: NavController, profileImage: Bitmap) {
             ),
             isError = isPasswordError,
             trailingIcon = {
-                Icon(
-                    contentDescription = stringResource(R.string.password_icon),
-                    tint = MaterialTheme.colorScheme.primary,
-                    imageVector = Icons.Default.RemoveRedEye,
-                    modifier = Modifier.clickable {
-                        passwordVisible = !passwordVisible
-                    }
-                )
+                if(isPasswordError){
+                    Icon(
+                        imageVector = Icons.Default.Error,
+                        tint = MaterialTheme.colorScheme.error,
+                        contentDescription = stringResource(R.string.error_icon)
+                    )
+                }
+            },
+            supportingText = {
+
+                if(isPasswordError){
+                    Text(
+                        text = stringResource(R.string.password_is_required),
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.End,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
             }
 
 
@@ -234,8 +261,9 @@ fun SignupForms(navController: NavController, profileImage: Bitmap) {
         Button(
             onClick = {
                 if(validate()){
-                    userRepository.saveUser(
+                    userRepository.update(
                         User(
+                            id = user!!.id,
                             name = name,
                             password = password,
                             email = email,
@@ -253,12 +281,33 @@ fun SignupForms(navController: NavController, profileImage: Bitmap) {
             colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
         ) {
             Text(
-                text = stringResource(R.string.sign_up),
+                text = stringResource(R.string.update_profile),
                 color = MaterialTheme.colorScheme.onPrimary,
                 style = MaterialTheme.typography.labelMedium
 
             )
         }
+        Button(
+            onClick = {},
+            modifier =  Modifier
+                .fillMaxWidth()
+                .height(48.dp),
+            shape = RoundedCornerShape(8.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.tertiary
+            )
+
+
+        ){
+            Text(
+                text = stringResource(R.string.delete_profile),
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onTertiary
+            )
+
+
+        }
+
         Spacer(modifier =  Modifier.height(5.dp))
         Row(
             modifier = Modifier
@@ -269,7 +318,7 @@ fun SignupForms(navController: NavController, profileImage: Bitmap) {
             TextButton (
 
                 onClick = {
-                    navController.navigate(Destination.InitialScreen.route)
+                    navController.navigate(Destination.HomeScreen.route)
                 }
             ){
                 Text(
@@ -336,7 +385,54 @@ fun SignupForms(navController: NavController, profileImage: Bitmap) {
             }
         )
     }
+
+    //Caixa de dialogo de exclusão
+
+    if(showDeleteDialog){
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = {
+                Text(
+                    text = stringResource(R.string.user_removal)
+                )
+            },
+            text = {
+                Text(
+                    text = stringResource(R.string.are_you_sure_that_you_want_to_delete_you_account)
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showDialogError = false
+                        if(user != null){
+                            userRepository.delete(user)
+                            navController.navigate(Destination.LoginScreen.route)
+                        }
+                    }
+                ) {
+                    Text(
+                        text = stringResource(R.string.ok)
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        showDialogError = false
+                    }
+                ) {
+                    Text(
+                        text = stringResource(R.string.cancel)
+                    )
+                }
+            }
+        )
+    }
+
 }
+
+
 
 @Preview(
     showBackground = true,
@@ -345,7 +441,7 @@ fun SignupForms(navController: NavController, profileImage: Bitmap) {
 @Composable
 private fun SignupFormPreview() {
     BioScanTheme() {
-        //SignupForms(rememberNavController(), profileImage)
+        //ProfileUserForms(rememberNavController(), profileImage)
     }
 
 }
