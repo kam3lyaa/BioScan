@@ -9,5 +9,7 @@ sealed class Destination(val route:  String){
 
     object LoginScreen: Destination(route = "login")
 
-    object HomeScreen: Destination(route = "home")
+    object HomeScreen: Destination(route = "home") {
+        fun createRoute(email: String) {}
+    }
 }

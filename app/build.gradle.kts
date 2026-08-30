@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    //colocando  alias ksp
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -44,7 +46,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.navigation.compose)
+
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
@@ -57,5 +59,13 @@ dependencies {
     //Mais Icones
     //Mais Icones
     implementation(libs.androidx.compose.material.icons.extended.android)
+
+    //Navigation compose Dependence
+    implementation(libs.androidx.navigation.compose)
+
+    //Room dependencies
+    implementation("androidx.room:room-runtime:2.7.2")
+    ksp(libs.androidx.room.compiler)
+    annotationProcessor(libs.androidx.room.compiler)
 
 }
