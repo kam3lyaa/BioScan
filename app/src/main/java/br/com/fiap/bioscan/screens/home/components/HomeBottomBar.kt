@@ -29,7 +29,7 @@ fun HomeBottomBar() {
 
     NavigationBar(
         modifier = Modifier.fillMaxWidth(),
-        containerColor = MaterialTheme.colorScheme.surface
+        containerColor = MaterialTheme.colorScheme.surfaceContainer
     ) {
         items.forEachIndexed { index, label ->
             NavigationBarItem(
@@ -48,9 +48,9 @@ fun HomeBottomBar() {
                     Text(text = label)
                 },
                 colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = MaterialTheme.colorScheme.primary,
+                    selectedIconColor = MaterialTheme.colorScheme.onPrimary,
                     selectedTextColor = MaterialTheme.colorScheme.primary,
-                    indicatorColor = MaterialTheme.colorScheme.primaryContainer
+                    indicatorColor = MaterialTheme.colorScheme.primary
                 )
             )
         }

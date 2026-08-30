@@ -19,7 +19,7 @@ fun RecentSpeciesSection() {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = "Últimos adicionados",
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.onBackground
         )
 

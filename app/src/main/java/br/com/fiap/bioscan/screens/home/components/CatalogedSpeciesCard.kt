@@ -21,7 +21,7 @@ fun CatalogedSpeciesCard() {
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                color = MaterialTheme.colorScheme.surfaceContainer,
+                color = MaterialTheme.colorScheme.primaryContainer,
                 shape = RoundedCornerShape(16.dp)
             )
             .padding(24.dp),
@@ -31,17 +31,17 @@ fun CatalogedSpeciesCard() {
             text = "0",
             style = MaterialTheme.typography.displayLarge,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface
+            color = MaterialTheme.colorScheme.onPrimaryContainer
         )
         Text(
             text = "ESPÉCIES",
             style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurface
+            color = MaterialTheme.colorScheme.onPrimaryContainer
         )
         Text(
             text = "Catalogadas",
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurface
+            color = MaterialTheme.colorScheme.onPrimaryContainer
         )
     }
 }

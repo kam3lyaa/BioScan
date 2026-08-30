@@ -45,7 +45,7 @@ fun HomeTopBar(userName: String, navController: NavHostController) {
                     .clip(CircleShape)
             )
 
-            Spacer(modifier = Modifier.width(12.dp))
+            Spacer(modifier = Modifier.width(15.dp))
 
             // nome ou saudação do usuário
             Text(
