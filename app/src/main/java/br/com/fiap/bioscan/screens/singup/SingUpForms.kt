@@ -1,6 +1,7 @@
 package br.com.fiap.bioscan.screens.singup
 
-import androidx.compose.foundation.clickable
+import android.graphics.Bitmap
+import android.util.Patterns
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,9 +35,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.AndroidUiModes.UI_MODE_NIGHT_NO
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -59,7 +61,29 @@ fun SignupForms(navController: NavController, profileImage: Bitmap) {
     var name by remember { mutableStateOf("")}
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var passwordVisible by remember { mutableStateOf(false) }
+
+
+    //variaveis de estado para verificar se os dados estão corretos
+    var isNameError by remember { mutableStateOf(false) }
+    var isEmailError by remember { mutableStateOf(false) }
+    var isPasswordError by remember { mutableStateOf(false) }
+
+    //Variável de estado para caixa de diálogo
+    var showDialogSuccess by remember { mutableStateOf(false) }
+    var showDialogError by remember { mutableStateOf(false) }
+
+    //Função de validação dos Dados digitados
+    fun validate(): Boolean {
+        isNameError = name.length < 3
+        isEmailError = email.length < 3 || !Patterns.EMAIL_ADDRESS.matcher(email).matches()
+        isPasswordError = password.length < 3
+
+        return !isNameError && !isEmailError && !isPasswordError
+    }
+
+    //instância da classe SheredPreferencesUserRepository
+    val userRepository = RoomUserRepository(LocalContext.current)
+
 
     Column(
         modifier = Modifier
@@ -143,7 +167,6 @@ fun SignupForms(navController: NavController, profileImage: Bitmap) {
                 focusedBorderColor = MaterialTheme.colorScheme.primary,
                 unfocusedBorderColor = MaterialTheme.colorScheme.primary
             ),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             leadingIcon ={
                 Icon(
                     imageVector = Icons.Default.Email,
@@ -196,11 +219,6 @@ fun SignupForms(navController: NavController, profileImage: Bitmap) {
                 focusedBorderColor = MaterialTheme.colorScheme.primary,
                 unfocusedBorderColor = MaterialTheme.colorScheme.primary
             ),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            visualTransformation = if (passwordVisible)
-                VisualTransformation.None
-            else
-                PasswordVisualTransformation(),
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Password,
@@ -214,14 +232,24 @@ fun SignupForms(navController: NavController, profileImage: Bitmap) {
             ),
             isError = isPasswordError,
             trailingIcon = {
-                Icon(
-                    contentDescription = stringResource(R.string.password_icon),
-                    tint = MaterialTheme.colorScheme.primary,
-                    imageVector = Icons.Default.RemoveRedEye,
-                    modifier = Modifier.clickable {
-                        passwordVisible = !passwordVisible
-                    }
-                )
+                if(isPasswordError){
+                    Icon(
+                        imageVector = Icons.Default.Error,
+                        tint = MaterialTheme.colorScheme.error,
+                        contentDescription = stringResource(R.string.error_icon)
+                    )
+                }
+            },
+            supportingText = {
+
+                if(isPasswordError){
+                    Text(
+                        text = stringResource(R.string.password_is_required),
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.End,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
             }
 
 
