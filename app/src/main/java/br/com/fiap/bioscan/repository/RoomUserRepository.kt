@@ -28,4 +28,13 @@ class RoomUserRepository(context: Context): UserRepository {
         return user != null
     }
 
+    override
+    fun update(user: User): Int {
+        return userDao.update(user)
+    }
+
+    override fun delete(user: User): Int {
+        return userDao.delete(user)
+    }
+
 }

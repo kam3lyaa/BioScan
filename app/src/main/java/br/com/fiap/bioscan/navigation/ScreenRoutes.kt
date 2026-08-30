@@ -12,4 +12,10 @@ sealed class Destination(val route:  String){
     object HomeScreen: Destination(route = "home") {
         fun createRoute(email: String) {}
     }
+
+    object UpdateScreen: Destination(route = "update/{email}"){
+        fun createRoute(email: String): String{
+            return "update/$email"
+        }
+    }
 }

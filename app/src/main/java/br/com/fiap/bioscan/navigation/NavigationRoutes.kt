@@ -1,9 +1,12 @@
 package br.com.fiap.bioscan.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import br.com.fiap.bioscan.screens.profile.UpdateScreen
 import br.com.fiap.bioscan.screens.initial.InitialScreen
 import br.com.fiap.bioscan.screens.login.LoginScreen
 import br.com.fiap.bioscan.screens.singup.SignupScreen
@@ -33,6 +36,18 @@ fun NavigationRoutes() {
             Destination.SignupScreen.route
         ){
             SignupScreen(navController)
+        }
+
+        composable (
+            Destination.UpdateScreen.route,
+            arguments = listOf(
+                navArgument(name = "email"){
+                    type =  NavType.StringType
+                }
+            )
+        ){backStackEntry ->
+            var email = backStackEntry.arguments?.getString("email")
+            UpdateScreen(navController, email)
         }
     }
 

@@ -24,4 +24,10 @@
     <string name="don_t_have_an_accont">Don\'t have an accont?</string>
     <string name="visibility_button">Visibility button</string>
     <string name="authentication_error">Authentication error!</string>
+    <string name="profile">Profile</string>
+    <string name="user_profile_details">User profile details</string>
+    <string name="update_profile">Update profile</string>
+    <string name="delete_profile">Delete profile</string>
+    <string name="user_removal">User removal</string>
+    <string name="are_you_sure_that_you_want_to_delete_you_account">Are you sure that you want to delete your account?</string>
 </resources>

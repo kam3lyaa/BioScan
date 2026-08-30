@@ -47,5 +47,13 @@ class UserSharedPreferencesRepository(context: Context): UserRepository {
         return emailPrefs == email && passwordPrefs == password
     }
 
+    override fun update(user: User): Int {
+        TODO("Not yet implemented")
+    }
+
+    override fun delete(user: User): Int {
+        TODO("Not yet implemented")
+    }
+
 
 }

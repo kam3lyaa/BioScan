@@ -48,6 +48,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import br.com.fiap.bioscan.R
 import br.com.fiap.bioscan.navigation.Destination
+import br.com.fiap.bioscan.repository.RoomUserRepository
 import br.com.fiap.bioscan.repository.UserRepository
 import br.com.fiap.bioscan.repository.UserSharedPreferencesRepository
 import br.com.fiap.bioscan.ui.theme.BioScanTheme
@@ -60,7 +61,7 @@ fun LoginForm(navController: NavHostController) {
     var password by remember { mutableStateOf("") }
 
     //variavel de instancia
-    val userRepository: UserRepository = UserSharedPreferencesRepository(LocalContext.current)
+    val userRepository: UserRepository = RoomUserRepository(LocalContext.current)
 
     //variavel de estado para a senha
     var showPassword by remember { mutableStateOf(false) }
