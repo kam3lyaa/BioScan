@@ -18,14 +18,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import br.com.fiap.bioscan.navigation.Destination
 import br.com.fiap.bioscan.ui.theme.BioScanTheme
 
 @Composable
-fun HomeBottomBar() {
+fun HomeBottomBar(navController: NavHostController) {
     var selectedItem by remember { mutableIntStateOf(0) }
 
     val items = listOf("Home", "Camera", "Catalog")
     val icons = listOf(Icons.Default.Home, Icons.Default.CameraAlt, Icons.Default.Collections)
+    val routes = listOf(
+        Destination.HomeScreen.route,
+        Destination.CameraScreen.route,
+        Destination.HomeScreen.route // Catalog ainda não existe, aponta pra Home por enquanto
+    )
 
     NavigationBar(
         modifier = Modifier.fillMaxWidth(),
@@ -36,7 +44,7 @@ fun HomeBottomBar() {
                 selected = selectedItem == index,
                 onClick = {
                     selectedItem = index
-                    // navegação real entra aqui quando Camera e Catalog existirem
+                    navController.navigate(routes[index])
                 },
                 icon = {
                     Icon(
@@ -61,6 +69,6 @@ fun HomeBottomBar() {
 @Composable
 private fun HomeBottomBarPreview() {
     BioScanTheme {
-        HomeBottomBar()
+        HomeBottomBar(navController = rememberNavController())
     }
 }

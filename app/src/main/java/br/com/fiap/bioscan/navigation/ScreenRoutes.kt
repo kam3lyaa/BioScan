@@ -13,6 +13,8 @@ sealed class Destination(val route:  String){
         fun createRoute(email: String) {}
     }
 
+    object CameraScreen: Destination(route = "camera")
+
     object UpdateScreen: Destination(route = "update/{email}"){
         fun createRoute(email: String): String{
             return "update/$email"
