@@ -24,7 +24,7 @@ fun HomeScreen(navController: NavHostController) {
             HomeTopBar(userName = "Olá, Mike", navController = navController)
         },
         bottomBar = {
-            HomeBottomBar()
+            HomeBottomBar(navController = navController)
         },
         containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->

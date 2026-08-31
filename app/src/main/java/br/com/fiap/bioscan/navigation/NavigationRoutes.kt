@@ -6,6 +6,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import br.com.fiap.bioscan.screens.camera.CameraScreen
+import br.com.fiap.bioscan.screens.home.HomeScreen
 import br.com.fiap.bioscan.screens.profile.UpdateScreen
 import br.com.fiap.bioscan.screens.initial.InitialScreen
 import br.com.fiap.bioscan.screens.login.LoginScreen
@@ -36,6 +38,18 @@ fun NavigationRoutes() {
             Destination.SignupScreen.route
         ){
             SignupScreen(navController)
+        }
+
+        composable(
+            Destination.HomeScreen.route
+        ){
+            HomeScreen(navController)
+        }
+
+        composable(
+            Destination.CameraScreen.route
+        ){
+            CameraScreen(navController)
         }
 
         composable (
