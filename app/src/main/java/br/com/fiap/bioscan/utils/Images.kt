@@ -15,11 +15,11 @@ fun convertBitmapToByteArray(bitmap: Bitmap): ByteArray{
     return outputStream.toByteArray()
 }
 
-fun convertByteArrayToBitmap(imageArray: ByteArray): Bitmap{
+fun convertByteArrayToBitmap(imageArray: ByteArray?): Bitmap{
     return BitmapFactory
         .decodeByteArray(
             imageArray,
             0,
-            imageArray.size
+            imageArray!!.size
         )
 }
