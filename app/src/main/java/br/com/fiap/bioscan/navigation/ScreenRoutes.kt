@@ -9,8 +9,10 @@ sealed class Destination(val route:  String){
 
     object LoginScreen: Destination(route = "login")
 
-    object HomeScreen: Destination(route = "home") {
-        fun createRoute(email: String) {}
+    object HomeScreen: Destination(route = "home/{email}") {
+        fun createRoute(email: String): String {
+            return "home/$email"
+        }
     }
 
     object CameraScreen: Destination(route = "camera")
@@ -20,4 +22,22 @@ sealed class Destination(val route:  String){
             return "update/$email"
         }
     }
+
+    object CatalogScreen: Destination(route= "catalog/{email}"){
+        fun createRoute(email: String): String{
+            return "catalog/$email"
+        }
+    }
+
+    object DetailsScreen: Destination(
+        route = "details/{email}/{speciesId}"
+    ){
+        fun createRoute(
+            email: String,
+            speciesId: String
+        ): String{
+            return "details/$email/$speciesId"
+        }
+    }
+
 }

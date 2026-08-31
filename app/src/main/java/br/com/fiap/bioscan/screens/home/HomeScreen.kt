@@ -1,50 +1,52 @@
 package br.com.fiap.bioscan.screens.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import br.com.fiap.bioscan.screens.home.components.BottomAppBar
 import br.com.fiap.bioscan.screens.home.components.CatalogedSpeciesCard
-import br.com.fiap.bioscan.screens.home.components.HomeBottomBar
-import br.com.fiap.bioscan.screens.home.components.HomeTopBar
 import br.com.fiap.bioscan.screens.home.components.RecentSpeciesSection
+import br.com.fiap.bioscan.screens.home.components.TopAppBar
 import br.com.fiap.bioscan.ui.theme.BioScanTheme
 
 @Composable
-fun HomeScreen(navController: NavHostController) {
-    Scaffold(
-        topBar = {
-            HomeTopBar(userName = "Olá, Mike", navController = navController)
-        },
-        bottomBar = {
-            HomeBottomBar(navController = navController)
-        },
-        containerColor = MaterialTheme.colorScheme.background
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            CatalogedSpeciesCard()
-            RecentSpeciesSection()
+fun HomeScreen(navController: NavController, email: String) {
+
+
+    Surface(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = MaterialTheme.colorScheme.background)
+    ) {
+        Scaffold(
+            topBar = { TopAppBar(email, navController) },
+            bottomBar = { BottomAppBar(navController, email) }
+
+        ) { paddingValues ->
+            Column(
+                modifier = Modifier.padding(paddingValues)
+            ) {
+                CatalogedSpeciesCard()
+                RecentSpeciesSection(navController, email)
+
+            }
         }
     }
 }
 
-@androidx.compose.ui.tooling.preview.Preview
+@Preview
 @Composable
-private fun HomeScreenPreview() {
-    BioScanTheme {
-        HomeScreen(navController = rememberNavController())
+private fun HomeeScreenPrev() {
+    BioScanTheme() {
+        HomeScreen( rememberNavController(), "")
     }
 }

@@ -33,4 +33,12 @@
     <string name="delete_profile">Delete profile</string>
     <string name="user_removal">User removal</string>
     <string name="are_you_sure_that_you_want_to_delete_you_account">Are you sure that you want to delete your account?</string>
+    <string name="species">SPECIES</string>
+    <string name="cataloged">Cataloged</string>
+    <string name="plant_image">Plant image</string>
+    <string name="recently_identified_species">Recently identified species:</string>
+    <string name="catalog">Catalog</string>
+    <string name="camera">Camera</string>
+    <string name="home">Home</string>
+    <string name="my_catalog">My Catalog</string>
 </resources>
