@@ -8,9 +8,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Error
@@ -86,8 +89,11 @@ fun ProfileUserForms(navController: NavController, profileImage: Bitmap, userEma
 
     Column(
         modifier = Modifier
+            .verticalScroll(rememberScrollState())
+            .imePadding()
             .padding(16.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            ,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -288,11 +294,12 @@ fun ProfileUserForms(navController: NavController, profileImage: Bitmap, userEma
             )
         }
         Button(
-            onClick = {},
+            onClick = {
+                showDeleteDialog = true
+            },
             modifier =  Modifier
-                .fillMaxWidth()
-                .height(48.dp),
-            shape = RoundedCornerShape(8.dp),
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(10.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.tertiary
             )
@@ -318,7 +325,7 @@ fun ProfileUserForms(navController: NavController, profileImage: Bitmap, userEma
             TextButton (
 
                 onClick = {
-                    navController.navigate(Destination.HomeScreen.route)
+                    navController.navigate(Destination.HomeScreen.createRoute(userEmail))
                 }
             ){
                 Text(

@@ -1,4 +1,5 @@
-package br.com.fiap.bioscan.screens.home.components
+package br.com.fiap.bioscan.screens.catalog.components
+
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,20 +19,24 @@ import androidx.compose.ui.unit.dp
 import br.com.fiap.bioscan.mock.mockPlants
 import br.com.fiap.bioscan.ui.theme.BioScanTheme
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import br.com.fiap.bioscan.R
+import br.com.fiap.bioscan.model.Plant
+import br.com.fiap.bioscan.screens.home.components.RecentSpeciesSection
 
 @Composable
-fun RecentSpeciesSection(navController: NavController, email: String) {
+fun RecentAddedSection(navController: NavController, email: String) {
     val plants = mockPlants
 
 
     Column(modifier = Modifier
         .padding(16.dp)
         .fillMaxWidth(),
-        ) {
+    ) {
         Text(
-            text = "Recently identified species:",
+            text = stringResource(R.string.recently_identified_species),
             style = MaterialTheme.typography.titleSmall,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary
@@ -47,22 +52,13 @@ fun RecentSpeciesSection(navController: NavController, email: String) {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(plants)  {plant ->
-                RecentSpeciesItem(plant, navController,email)
+                RecentAddedCard(plant)
 
             }
         }
 
 
-//        // por enquanto, fixo com 2 itens de teste
-//        Row(modifier = Modifier
-//            .fillMaxWidth(),
-//            horizontalArrangement = Arrangement.Center
-//        ) {
-//            RecentSpeciesItem()
-//            RecentSpeciesItem()
-//
-//
-//        }
+
     }
 }
 
@@ -72,6 +68,6 @@ fun RecentSpeciesSection(navController: NavController, email: String) {
 @Composable
 private fun RecentSpeciesSectionPreview() {
     BioScanTheme {
-        RecentSpeciesSection(rememberNavController(), "",)
+        RecentSpeciesSection(rememberNavController(),"")
     }
 }
