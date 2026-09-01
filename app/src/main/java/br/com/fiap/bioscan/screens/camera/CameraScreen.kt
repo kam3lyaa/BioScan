@@ -29,7 +29,8 @@ import java.io.ByteArrayOutputStream
 fun CameraScreen(navController: NavHostController) {
 
     var foto by remember { mutableStateOf<Bitmap?>(null) }
-    var resultado by remember { mutableStateOf<String?>(null) }
+    var resultado by remember { mutableStateOf<PlantIdentificationResult?>(null) }
+    var mensagemErro by remember { mutableStateOf<String?>(null) }
     var carregando by remember { mutableStateOf(false) }
 
     val coroutineScope = rememberCoroutineScope()
@@ -39,6 +40,7 @@ fun CameraScreen(navController: NavHostController) {
     ) { imagem ->
         foto = imagem
         resultado = null
+        mensagemErro = null
     }
 
     Column(
@@ -65,7 +67,9 @@ fun CameraScreen(navController: NavHostController) {
                 onClick = {
                     coroutineScope.launch {
                         carregando = true
-                        resultado = identificarPlanta(it)
+                        val resposta = identificarPlanta(it)
+                        resultado = resposta.first
+                        mensagemErro = resposta.second
                         carregando = false
                     }
                 }
@@ -75,6 +79,10 @@ fun CameraScreen(navController: NavHostController) {
         }
 
         resultado?.let {
+            PlantResultCard(it)
+        }
+
+        mensagemErro?.let {
             Text(text = it)
         }
     }
@@ -98,7 +106,7 @@ private fun bitmapToMultipart(bitmap: Bitmap): MultipartBody.Part {
     )
 }
 
-private suspend fun identificarPlanta(bitmap: Bitmap): String {
+private suspend fun identificarPlanta(bitmap: Bitmap): Pair<PlantIdentificationResult?, String?> {
     return try {
         val imagePart = bitmapToMultipart(bitmap)
         val organsBody = "auto".toRequestBody("text/plain".toMediaTypeOrNull())
@@ -115,21 +123,22 @@ private suspend fun identificarPlanta(bitmap: Bitmap): String {
             val resultado = body?.results?.firstOrNull()
 
             if (resultado != null) {
-                val nome = resultado.species.scientificNameWithoutAuthor
-                val nomePopular = resultado.species.commonNames?.firstOrNull() ?: "sem nome popular"
-                val genero = resultado.species.genus.scientificNameWithoutAuthor
-                val familia = resultado.species.family.scientificNameWithoutAuthor
-                val confianca = (resultado.score * 100).toInt()
-
-                "Nome popular: $nomePopular\nEspécie: $nome\nGênero: $genero\nFamília: $familia\nConfiança: $confianca%"
+                val identificado = PlantIdentificationResult(
+                    nomePopular = resultado.species.commonNames?.firstOrNull() ?: "sem nome popular",
+                    nomeCientifico = resultado.species.scientificNameWithoutAuthor,
+                    genero = resultado.species.genus.scientificNameWithoutAuthor,
+                    familia = resultado.species.family.scientificNameWithoutAuthor,
+                    confianca = (resultado.score * 100).toInt()
+                )
+                Pair(identificado, null)
             } else {
-                "Nenhuma planta identificada"
+                Pair(null, "Nenhuma planta identificada")
             }
         } else {
-            "Erro na API: ${response.code()}"
+            Pair(null, "Erro na API: ${response.code()}")
         }
     } catch (e: Exception) {
-        "Erro de conexão: ${e.message}"
+        Pair(null, "Erro de conexão: ${e.message}")
     }
 }
 
