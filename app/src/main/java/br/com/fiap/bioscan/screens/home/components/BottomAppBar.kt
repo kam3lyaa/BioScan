@@ -35,7 +35,7 @@ fun BottomAppBar(navController: NavController, email: String? = "",) {
     val items = listOf(
         BottomNavigationItem(stringResource(R.string.home), icon = Icons.Default.Home, route = Destination.HomeScreen.createRoute(email ?: "")),
         BottomNavigationItem(stringResource(R.string.camera), icon = Icons.Default.Camera,
-            route = Destination.HomeScreen.createRoute(email ?: "")),
+            route = Destination.CameraScreen.route),
         BottomNavigationItem(stringResource(R.string.catalog), icon = Icons.Default.Collections, route= Destination.CatalogScreen.createRoute(email ?: "")),
     )
 
