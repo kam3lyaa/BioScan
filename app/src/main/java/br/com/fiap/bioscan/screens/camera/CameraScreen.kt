@@ -105,23 +105,23 @@ private suspend fun identificarPlanta(bitmap: Bitmap): String {
 
         val response = RetrofitInstance.api.identifyPlant(
             apiKey = BuildConfig.PLANTNET_API_KEY,
+            lang = "pt",
             images = imagePart,
             organs = organsBody
         )
 
         if (response.isSuccessful) {
             val body = response.body()
-            val resultados = body?.results?.take(3)
+            val resultado = body?.results?.firstOrNull()
 
-            if (!resultados.isNullOrEmpty()) {
-                resultados.joinToString(separator = "\n\n") { resultado ->
-                    val nome = resultado.species.scientificNameWithoutAuthor
-                    val genero = resultado.species.genus.scientificNameWithoutAuthor
-                    val familia = resultado.species.family.scientificNameWithoutAuthor
-                    val confianca = (resultado.score * 100).toInt()
+            if (resultado != null) {
+                val nome = resultado.species.scientificNameWithoutAuthor
+                val nomePopular = resultado.species.commonNames?.firstOrNull() ?: "sem nome popular"
+                val genero = resultado.species.genus.scientificNameWithoutAuthor
+                val familia = resultado.species.family.scientificNameWithoutAuthor
+                val confianca = (resultado.score * 100).toInt()
 
-                    "Espécie: $nome\nGênero: $genero\nFamília: $familia\nConfiança: $confianca%"
-                }
+                "Nome popular: $nomePopular\nEspécie: $nome\nGênero: $genero\nFamília: $familia\nConfiança: $confianca%"
             } else {
                 "Nenhuma planta identificada"
             }

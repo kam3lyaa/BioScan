@@ -13,6 +13,7 @@ interface PlantNetApiService {
     @POST("v2/identify/all")
     suspend fun identifyPlant(
         @Query("api-key") apiKey: String,
+        @Query("lang") lang: String,
         @Part images: MultipartBody.Part,
         @Part("organs") organs: okhttp3.RequestBody
     ): Response<PlantNetResponse>

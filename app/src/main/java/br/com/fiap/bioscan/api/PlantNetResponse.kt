@@ -14,7 +14,8 @@ data class Species(
     val scientificNameWithoutAuthor: String,
     val scientificNameAuthorship: String?,
     val genus: Genus,
-    val family: Family
+    val family: Family,
+    val commonNames: List<String>?
 )
 
 data class Genus(
