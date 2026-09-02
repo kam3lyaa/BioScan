@@ -76,7 +76,7 @@ fun TopAppBar(email: String? = "", navController: NavController) {
 
                     Text(
                         text = email,
-                        style = MaterialTheme.typography.displaySmall,
+                        style = MaterialTheme.typography.bodySmall,
 
                         )
                 }

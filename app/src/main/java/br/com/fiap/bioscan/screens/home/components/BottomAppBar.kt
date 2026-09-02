@@ -13,7 +13,8 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,12 +40,19 @@ fun BottomAppBar(navController: NavController, email: String? = "",) {
         BottomNavigationItem(stringResource(R.string.catalog), icon = Icons.Default.Collections, route= Destination.CatalogScreen.createRoute(email ?: "")),
     )
 
+    val borderColor = MaterialTheme.colorScheme.onPrimaryContainer
 
     NavigationBar(
-        containerColor = MaterialTheme.colorScheme.tertiary,
-        modifier = Modifier.clip(shape = RoundedCornerShape(24.dp))
-
-
+        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+        modifier = Modifier
+            .drawBehind{
+                drawLine(
+                    color = borderColor,
+                    start = Offset(0f,0f),
+                    end = Offset(size.width, 0f),
+                    strokeWidth = 0.25.dp.toPx()
+                )
+            }
     ) {
         items.forEach { item ->
             NavigationBarItem(
@@ -57,7 +65,7 @@ fun BottomAppBar(navController: NavController, email: String? = "",) {
                     Icon(
                         imageVector = item.icon,
                         contentDescription = item.title,
-                        tint = MaterialTheme.colorScheme.onTertiary,
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
                         modifier = Modifier.size(28.dp)
                     )
                 },
@@ -65,7 +73,7 @@ fun BottomAppBar(navController: NavController, email: String? = "",) {
                     Text(
                         text = item.title,
                         style = MaterialTheme.typography.displaySmall,
-                        color = MaterialTheme.colorScheme.onTertiary
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 }
             )

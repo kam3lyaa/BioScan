@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -84,7 +85,8 @@ fun CatalogScreen(navController: NavController, email: String) {
                 ) {
                     Text(
                         text = stringResource(R.string.my_catalog),
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
                     )
                     Card(
                         modifier = Modifier
@@ -118,7 +120,6 @@ fun CatalogScreen(navController: NavController, email: String) {
                 }
 
                 Column(modifier = Modifier
-                    .padding(8.dp)
                     .fillMaxWidth()) {
                     RecentAddedSection(navController, email)
                 }

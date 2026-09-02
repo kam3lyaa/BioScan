@@ -2,6 +2,7 @@ package br.com.fiap.bioscan.screens.catalog.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -36,8 +37,8 @@ import br.com.fiap.bioscan.ui.theme.BioScanTheme
 fun RecentAddedCard(plant: Plant) {
 
     Card(
-        modifier = Modifier.padding(8.dp)
-            .height(200.dp)
+        modifier = Modifier
+            .height(230.dp)
             .width(150.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.onBackground
@@ -46,8 +47,8 @@ fun RecentAddedCard(plant: Plant) {
         
         Column(
             modifier = Modifier
-                .padding(8.dp)
                 .fillMaxSize()
+                .padding(8.dp)
         ) {
 
             Row(
@@ -73,18 +74,25 @@ fun RecentAddedCard(plant: Plant) {
                 }
             }
 
-            Icon(
-                imageVector = Icons.Default.Image,
-                contentDescription = stringResource(R.string.plant_image),
-                tint = MaterialTheme.colorScheme.primary,
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(110.dp)
-            )
+                    .weight(1f),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Image,
+                    contentDescription = stringResource(R.string.plant_image),
+                    tint = MaterialTheme.colorScheme.inverseOnSurface,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .size(50.dp),
+                )
+            }
 
             Column(
                 modifier = Modifier
-                    .padding(5.dp)
+                    .padding(7.dp)
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.Start,
             ) {

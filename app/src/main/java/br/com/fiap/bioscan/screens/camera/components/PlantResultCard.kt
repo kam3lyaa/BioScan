@@ -1,4 +1,4 @@
-package br.com.fiap.bioscan.screens.camera
+package br.com.fiap.bioscan.screens.camera.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -27,7 +27,7 @@ fun PlantResultCard(resultado: PlantIdentificationResult) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(horizontal = 29.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.onBackground
         )
@@ -35,7 +35,7 @@ fun PlantResultCard(resultado: PlantIdentificationResult) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(15.dp)
         ) {
             Text(
                 text = resultado.nomePopular,

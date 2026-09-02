@@ -33,7 +33,7 @@ fun CatalogedSpeciesCard() {
     var catalogedSpecies by remember { mutableStateOf(plants.size) }
     Card(
         modifier = Modifier
-            .padding(20.dp)
+            .padding(35.dp)
             .fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
         shape = RoundedCornerShape(16.dp),

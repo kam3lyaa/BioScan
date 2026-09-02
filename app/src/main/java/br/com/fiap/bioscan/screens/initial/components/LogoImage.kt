@@ -26,7 +26,7 @@ fun LogoImage(modifier: Modifier = Modifier) {
             contentDescription = "Logo da marca",
             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
             modifier = Modifier
-                .size(240.dp)
+                .size(200.dp)
                 .align(Alignment.Center)
 
         )
