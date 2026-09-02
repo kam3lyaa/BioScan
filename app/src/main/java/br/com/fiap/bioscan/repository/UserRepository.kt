@@ -3,16 +3,17 @@ package br.com.fiap.bioscan.repository
 import br.com.fiap.bioscan.model.User
 
 interface UserRepository {
-    fun saveUser(user: User)
+    suspend fun saveUser(user: User)
 
-    fun getUser(): User
+    suspend fun getUser(): User
 
-    fun getUserById(id: Int): User?
+    suspend fun getUserById(id: Int): User?
 
-    fun getUserByEmail(email: String): User?
+    suspend fun getUserByEmail(email: String): User?
 
-    fun login(email: String, password: String): Boolean
+    suspend fun login(email: String, password: String): Boolean
 
-    fun update(user: User): Int
-    fun delete(user: User): Int
+    suspend fun update(user: User): Int
+
+    suspend fun delete(user: User): Int
 }

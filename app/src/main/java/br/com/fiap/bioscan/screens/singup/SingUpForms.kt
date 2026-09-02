@@ -32,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,36 +47,30 @@ import androidx.compose.ui.tooling.preview.AndroidUiModes.UI_MODE_NIGHT_NO
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import br.com.fiap.bioscan.R
 import br.com.fiap.bioscan.model.User
 import br.com.fiap.bioscan.navigation.Destination
 import br.com.fiap.bioscan.repository.RoomUserRepository
-import br.com.fiap.bioscan.repository.UserRepository
-import br.com.fiap.bioscan.repository.UserSharedPreferencesRepository
 import br.com.fiap.bioscan.ui.theme.BioScanTheme
 import br.com.fiap.bioscan.utils.convertBitmapToByteArray
+import kotlinx.coroutines.launch
 
 @Composable
-fun SignupForms(navController: NavController, profileImage: Bitmap) {
+fun SingUpForms(navController: NavController, profileImage: Bitmap) {
+    val scope = rememberCoroutineScope()
+    val userRepository = RoomUserRepository(LocalContext.current)
 
-    //variáveis de estado
-    var name by remember { mutableStateOf("")}
+    var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-
-    //variaveis de estado para verificar se os dados estão corretos
     var isNameError by remember { mutableStateOf(false) }
     var isEmailError by remember { mutableStateOf(false) }
     var isPasswordError by remember { mutableStateOf(false) }
 
-    //Variável de estado para caixa de diálogo
     var showDialogSuccess by remember { mutableStateOf(false) }
     var showDialogError by remember { mutableStateOf(false) }
 
-    //Função de validação dos Dados digitados
     fun validate(): Boolean {
         isNameError = name.length < 3
         isEmailError = email.length < 3 || !Patterns.EMAIL_ADDRESS.matcher(email).matches()
@@ -84,28 +79,20 @@ fun SignupForms(navController: NavController, profileImage: Bitmap) {
         return !isNameError && !isEmailError && !isPasswordError
     }
 
-    //instância da classe SheredPreferencesUserRepository
-    val userRepository = RoomUserRepository(LocalContext.current)
-
-
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
             .imePadding()
-            .fillMaxWidth()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(16.dp)
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-
-
-        //campo de texto para o nome do usuário.
         OutlinedTextField(
-            value= name,
-            onValueChange = {nameValue ->
-                name = nameValue
-            },
+            value = name,
+            onValueChange = { name = it },
             modifier = Modifier.fillMaxWidth(),
-            label= {
+            label = {
                 Text(
                     text = stringResource(R.string.your_name),
                     color = MaterialTheme.colorScheme.onBackground,
@@ -117,7 +104,7 @@ fun SignupForms(navController: NavController, profileImage: Bitmap) {
                 focusedBorderColor = MaterialTheme.colorScheme.primary,
                 unfocusedBorderColor = MaterialTheme.colorScheme.primary
             ),
-            leadingIcon ={
+            leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Person,
                     contentDescription = stringResource(R.string.user_icon),
@@ -131,7 +118,7 @@ fun SignupForms(navController: NavController, profileImage: Bitmap) {
             ),
             isError = isNameError,
             trailingIcon = {
-                if(isNameError){
+                if (isNameError) {
                     Icon(
                         imageVector = Icons.Default.Error,
                         contentDescription = stringResource(R.string.error_icon)
@@ -139,7 +126,7 @@ fun SignupForms(navController: NavController, profileImage: Bitmap) {
                 }
             },
             supportingText = {
-                if(isNameError){
+                if (isNameError) {
                     Text(
                         text = stringResource(R.string.user_name_is_required),
                         modifier = Modifier.fillMaxWidth(),
@@ -148,18 +135,13 @@ fun SignupForms(navController: NavController, profileImage: Bitmap) {
                     )
                 }
             }
+        )
 
-            )
-
-
-        //campo de texto para o email do usuário.
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
-            value= email,
-            onValueChange = {emailValue ->
-                email = emailValue
-            },
-            label= {
+            value = email,
+            onValueChange = { email = it },
+            label = {
                 Text(
                     text = stringResource(R.string.your_e_mail),
                     color = MaterialTheme.colorScheme.onBackground,
@@ -171,7 +153,7 @@ fun SignupForms(navController: NavController, profileImage: Bitmap) {
                 focusedBorderColor = MaterialTheme.colorScheme.primary,
                 unfocusedBorderColor = MaterialTheme.colorScheme.primary
             ),
-            leadingIcon ={
+            leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Email,
                     contentDescription = stringResource(R.string.email_icon),
@@ -184,7 +166,7 @@ fun SignupForms(navController: NavController, profileImage: Bitmap) {
             ),
             isError = isEmailError,
             trailingIcon = {
-                if(isEmailError){
+                if (isEmailError) {
                     Icon(
                         imageVector = Icons.Default.Error,
                         contentDescription = stringResource(R.string.error_icon)
@@ -192,7 +174,7 @@ fun SignupForms(navController: NavController, profileImage: Bitmap) {
                 }
             },
             supportingText = {
-                if(isEmailError){
+                if (isEmailError) {
                     Text(
                         text = stringResource(R.string.email_is_required),
                         modifier = Modifier.fillMaxWidth(),
@@ -201,16 +183,12 @@ fun SignupForms(navController: NavController, profileImage: Bitmap) {
                     )
                 }
             }
-
         )
 
-        //campo de texto para a senha do usuário.
         OutlinedTextField(
-            value= password,
-            onValueChange = {passwordValue ->
-                password = passwordValue
-            },
-            label= {
+            value = password,
+            onValueChange = { password = it },
+            label = {
                 Text(
                     text = stringResource(R.string.your_password),
                     color = MaterialTheme.colorScheme.onBackground,
@@ -236,7 +214,7 @@ fun SignupForms(navController: NavController, profileImage: Bitmap) {
             ),
             isError = isPasswordError,
             trailingIcon = {
-                if(isPasswordError){
+                if (isPasswordError) {
                     Icon(
                         imageVector = Icons.Default.Error,
                         tint = MaterialTheme.colorScheme.error,
@@ -245,8 +223,7 @@ fun SignupForms(navController: NavController, profileImage: Bitmap) {
                 }
             },
             supportingText = {
-
-                if(isPasswordError){
+                if (isPasswordError) {
                     Text(
                         text = stringResource(R.string.password_is_required),
                         modifier = Modifier.fillMaxWidth(),
@@ -255,32 +232,29 @@ fun SignupForms(navController: NavController, profileImage: Bitmap) {
                     )
                 }
             }
-
-
         )
 
-        Spacer(
-            modifier =  Modifier.height(16.dp)
-        )
+        Spacer(modifier = Modifier.height(16.dp))
 
         Button(
             onClick = {
-                if(validate()){
-                    userRepository.saveUser(
-                        User(
-                            name = name,
-                            password = password,
-                            email = email,
-                            userImage = convertBitmapToByteArray(profileImage)
+                if (validate()) {
+                    scope.launch {
+                        userRepository.saveUser(
+                            User(
+                                name = name,
+                                password = password,
+                                email = email,
+                                userImage = convertBitmapToByteArray(profileImage)
+                            )
                         )
-                    )
-                    showDialogSuccess = true
-                }else {
+                        showDialogSuccess = true
+                    }
+                } else {
                     showDialogError = true
                 }
-
             },
-            modifier =  Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(10.dp),
             colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
         ) {
@@ -288,22 +262,22 @@ fun SignupForms(navController: NavController, profileImage: Bitmap) {
                 text = stringResource(R.string.sign_up),
                 color = MaterialTheme.colorScheme.onPrimary,
                 style = MaterialTheme.typography.labelMedium
-
             )
         }
-        Spacer(modifier =  Modifier.height(5.dp))
+
+        Spacer(modifier = Modifier.height(5.dp))
+
         Row(
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.End
         ) {
-            TextButton (
-
+            TextButton(
                 onClick = {
-                    navController.navigate(Destination.InitialScreen.route)
+                    navController.navigate(Destination.LoginScreen.route)
                 }
-            ){
+            ) {
                 Text(
                     text = stringResource(R.string.cancel),
                     color = MaterialTheme.colorScheme.primary,
@@ -312,61 +286,36 @@ fun SignupForms(navController: NavController, profileImage: Bitmap) {
                 )
             }
         }
-        //Caixa de diálogo de sucesso
-        if(showDialogSuccess){
+
+        if (showDialogSuccess) {
             AlertDialog(
                 onDismissRequest = { showDialogError = false },
-                title = {
-                    Text(
-                        text = stringResource(R.string.success)
-                    )
-                },
-                text = {
-                    Text(
-                        text = stringResource(R.string.account_created_successfully)
-                    )
-                },
+                title = { Text(text = stringResource(R.string.success)) },
+                text = { Text(text = stringResource(R.string.account_created_successfully)) },
                 confirmButton = {
                     TextButton(
                         onClick = {
                             navController.navigate(Destination.LoginScreen.route)
                         }
                     ) {
-                        Text(
-                            text = stringResource(R.string.ok)
-                        )
+                        Text(text = stringResource(R.string.ok))
                     }
                 }
             )
-
         }
-    }
-        //Caixa de dialogo de erro
-    if(showDialogError){
-        AlertDialog(
-            onDismissRequest = { showDialogError = false },
-            title = {
-                Text(
-                text = stringResource(R.string.error)
-                )
-            },
-            text = {
-                Text(
-                    text = stringResource(R.string.please_fill_in_all_fields_correctly)
-                )
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        showDialogError = false
+
+        if (showDialogError) {
+            AlertDialog(
+                onDismissRequest = { showDialogError = false },
+                title = { Text(text = stringResource(R.string.error)) },
+                text = { Text(text = stringResource(R.string.please_fill_in_all_fields_correctly)) },
+                confirmButton = {
+                    TextButton(onClick = { showDialogError = false }) {
+                        Text(text = stringResource(R.string.ok))
                     }
-                ) {
-                    Text(
-                        text = stringResource(R.string.ok)
-                    )
                 }
-            }
-        )
+            )
+        }
     }
 }
 
@@ -376,8 +325,7 @@ fun SignupForms(navController: NavController, profileImage: Bitmap) {
 )
 @Composable
 private fun SignupFormPreview() {
-    BioScanTheme() {
-        //SignupForms(rememberNavController(), profileImage)
+    BioScanTheme {
+        //SingUpForms(rememberNavController(), profileImage)
     }
-
 }
