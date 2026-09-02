@@ -1,6 +1,7 @@
 package br.com.fiap.bioscan.screens.camera
 
 import android.graphics.Bitmap
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -23,6 +24,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -31,6 +33,7 @@ import br.com.fiap.bioscan.BuildConfig
 import br.com.fiap.bioscan.api.RetrofitInstance
 import br.com.fiap.bioscan.api.toPlant
 import br.com.fiap.bioscan.repository.RoomPlantRepository
+import br.com.fiap.bioscan.repository.RoomUserRepository
 import br.com.fiap.bioscan.screens.camera.components.CameraButton
 import br.com.fiap.bioscan.screens.camera.components.IdentifyButton
 import br.com.fiap.bioscan.screens.camera.components.PlantIdentificationResult
@@ -43,14 +46,16 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.ByteArrayOutputStream
 
 @Composable
-fun CameraScreen(navController: NavHostController) {
+fun CameraScreen(navController: NavHostController, userEmail: String? = "") {
 
     val context = LocalContext.current
-    val repository = remember { RoomPlantRepository(context) }
+    val plantRepository = remember { RoomPlantRepository(context) }
+    val userRepository = remember { RoomUserRepository(context) }
 
     var foto by remember { mutableStateOf<Bitmap?>(null) }
     var resultado by remember { mutableStateOf<PlantIdentificationResult?>(null) }
     var mensagemErro by remember { mutableStateOf<String?>(null) }
+    var mensagemSucesso by remember { mutableStateOf<String?>(null) }
     var carregando by remember { mutableStateOf(false) }
 
     val coroutineScope = rememberCoroutineScope()
@@ -61,6 +66,7 @@ fun CameraScreen(navController: NavHostController) {
         foto = imagem
         resultado = null
         mensagemErro = null
+        mensagemSucesso = null
     }
 
     Column(
@@ -91,8 +97,21 @@ fun CameraScreen(navController: NavHostController) {
             PlantResultCard(it)
         }
 
+        mensagemSucesso?.let {
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                text = it,
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Bold
+            )
+        }
+
         mensagemErro?.let {
-            Text(text = it)
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                text = it,
+                color = MaterialTheme.colorScheme.error
+            )
         }
 
         Row(
@@ -109,10 +128,28 @@ fun CameraScreen(navController: NavHostController) {
                     onClick = {
                         coroutineScope.launch {
                             carregando = true
-                            // Passamos o repositório e o ID do usuário (1L para testes)
-                            val resposta = identificarEGravarPlanta(fotoAtual, repository, userId = 1L)
+                            mensagemErro = null
+                            mensagemSucesso = null
+
+                            // Obtém o usuário ativo para vincular a planta ao ID correto
+                            val activeUser = if (!userEmail.isNullOrEmpty()) {
+                                userRepository.getUserByEmail(userEmail)
+                            } else {
+                                userRepository.getUser()
+                            }
+
+                            // Converte o ID explicitamente para Long
+                            val currentUserId: Long = activeUser?.id?.toLong() ?: 1L
+
+                            val resposta = identificarEGravarPlanta(fotoAtual, plantRepository, userId = currentUserId)
                             resultado = resposta.first
                             mensagemErro = resposta.second
+
+                            if (resultado != null && mensagemErro == null) {
+                                mensagemSucesso = "Planta identificada e salva no catálogo!"
+                                Toast.makeText(context, "Planta salva com sucesso!", Toast.LENGTH_SHORT).show()
+                            }
+
                             carregando = false
                         }
                     }
@@ -162,13 +199,11 @@ private suspend fun identificarEGravarPlanta(
 
             if (body != null && resultado != null) {
 
-                // 1. Converte a resposta da API para a entidade do banco e salva
                 val plantEntity = body.toPlant(userId = userId)
                 if (plantEntity != null) {
                     repository.savePlant(plantEntity)
                 }
 
-                // 2. Retorna a estrutura para exibição na tela
                 val identificado = PlantIdentificationResult(
                     nomePopular = resultado.species.commonNames?.firstOrNull()
                         ?: "sem nome popular",

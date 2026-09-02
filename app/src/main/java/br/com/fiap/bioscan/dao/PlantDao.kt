@@ -15,6 +15,9 @@ interface PlantDao {
     @Query("SELECT * FROM tb_plant WHERE user_id = :userId")
     suspend fun getPlantByUser(userId: Long): List<Plant>
 
+    @Query("SELECT * FROM tb_plant")
+    suspend fun getAllPlants(): List<Plant>
+
     @Query("SELECT * FROM tb_plant WHERE id = :plantId")
     suspend fun getPlantById(plantId: Long): Plant?
 

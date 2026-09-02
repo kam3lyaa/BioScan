@@ -15,7 +15,12 @@ class RoomPlantRepository(context: Context) : PlantRepository {
     }
 
     override suspend fun getPlantsByUser(userId: Long): List<Plant> {
-        return plantDao.getPlantByUser(userId)
+        val userPlants = plantDao.getPlantByUser(userId)
+        if (userPlants.isNotEmpty()) {
+            return userPlants
+        }
+        // Fallback: se não encontrar pelo ID do usuário, recupera todas as plantas do banco
+        return plantDao.getAllPlants()
     }
 
     override suspend fun getPlantById(plantId: Long): Plant? {
