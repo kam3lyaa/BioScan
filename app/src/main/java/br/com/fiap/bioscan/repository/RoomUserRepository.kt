@@ -4,37 +4,36 @@ import android.content.Context
 import br.com.fiap.bioscan.dao.BioScanDatabase
 import br.com.fiap.bioscan.model.User
 
-class RoomUserRepository(context: Context): UserRepository {
+class RoomUserRepository(context: Context) : UserRepository {
 
     private val userDao = BioScanDatabase.getDatabase(context).userDao()
-    override fun saveUser(user: User) {
+
+    override suspend fun saveUser(user: User) {
         userDao.save(user)
     }
 
-    override
-    fun getUserById(id: Int): User{
-        return userDao.getUserById(1) ?: User()
+    override suspend fun getUserById(id: Int): User {
+        return userDao.getUserById(id) ?: User()
     }
-    override fun getUser(): User {
+
+    override suspend fun getUser(): User {
         return userDao.getUserById(1) ?: User()
     }
 
-    override fun getUserByEmail(email: String): User? {
+    override suspend fun getUserByEmail(email: String): User? {
         return userDao.getUserByEmail(email)
     }
 
-    override fun login(email: String, password: String): Boolean {
-        val user = userDao.login(email,password)
+    override suspend fun login(email: String, password: String): Boolean {
+        val user = userDao.login(email, password)
         return user != null
     }
 
-    override
-    fun update(user: User): Int {
+    override suspend fun update(user: User): Int {
         return userDao.update(user)
     }
 
-    override fun delete(user: User): Int {
+    override suspend fun delete(user: User): Int {
         return userDao.delete(user)
     }
-
 }

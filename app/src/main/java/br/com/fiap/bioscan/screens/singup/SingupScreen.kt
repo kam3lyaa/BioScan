@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -31,7 +30,6 @@ import androidx.compose.ui.tooling.preview.AndroidUiModes.UI_MODE_NIGHT_YES
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import br.com.fiap.bioscan.screens.initial.components.BottomEndCard
 import br.com.fiap.bioscan.ui.theme.BioScanTheme
@@ -40,26 +38,23 @@ import br.com.fiap.bioscan.ui.theme.BioScanTheme
 fun SignupScreen(navController: NavController) {
     val context = LocalContext.current
 
-    //Criar uma variável que amazarnará a imagem do perfil
     val placeholderImage = BitmapFactory.decodeResource(
         Resources.getSystem(),
         android.R.drawable.ic_menu_gallery
     )
 
-    //Armazenando a imagem do perfil numa variável do tipo bitmap
     var profileImage by remember { mutableStateOf<Bitmap>(placeholderImage) }
 
-    //Criando um Lançador de atividades
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri ->
-        if(Build.VERSION.SDK_INT < 28){
+        if (Build.VERSION.SDK_INT < 28) {
             profileImage = MediaStore
                 .Images
                 .Media
                 .getBitmap(context.contentResolver, uri)
-        }else{
-            if(uri != null){
+        } else {
+            if (uri != null) {
                 val source = ImageDecoder
                     .createSource(context.contentResolver, uri)
                 profileImage = ImageDecoder.decodeBitmap(source)
@@ -67,18 +62,12 @@ fun SignupScreen(navController: NavController) {
         }
     }
 
-
-
-
-
-
-
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.Center
-    ){
+    ) {
         BottomEndCard(modifier = Modifier.align(alignment = Alignment.BottomEnd))
 
         Column(
@@ -87,15 +76,13 @@ fun SignupScreen(navController: NavController) {
                 .fillMaxWidth(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
-
         ) {
             TextComponent()
             Spacer(modifier = Modifier.height(30.dp))
-            UserImage(profileImage,launcher)
+            UserImage(profileImage, launcher)
             Spacer(modifier = Modifier.height(10.dp))
 
-            SignupForms(navController, profileImage)
-
+            SingUpForms(navController, profileImage)
         }
     }
 }
@@ -106,9 +93,8 @@ fun SignupScreen(navController: NavController) {
     showSystemUi = true
 )
 @Composable
-private fun SignupScreenPreview(){
+private fun SignupScreenPreview() {
     BioScanTheme {
         SignupScreen(rememberNavController())
     }
 }
-

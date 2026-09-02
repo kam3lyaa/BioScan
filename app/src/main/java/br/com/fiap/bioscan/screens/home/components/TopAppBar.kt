@@ -18,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,11 +29,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import br.com.fiap.bioscan.model.User
 import br.com.fiap.bioscan.navigation.Destination
 import br.com.fiap.bioscan.repository.RoomUserRepository
 import br.com.fiap.bioscan.repository.UserRepository
@@ -43,42 +46,46 @@ import br.com.fiap.bioscan.utils.convertByteArrayToBitmap
 @Composable
 fun TopAppBar(email: String? = "", navController: NavController) {
 
-    //instancia do repositório
-    val userRepository: UserRepository = RoomUserRepository(LocalContext.current)
+    val isPreview = LocalInspectionMode.current
+    val context = LocalContext.current
 
-    //busca do user pelo email
-    val user = userRepository.getUserByEmail(email!!)
+    var user by remember { mutableStateOf<User?>(null) }
+    var profileBitmap by remember { mutableStateOf<Bitmap?>(null) }
 
-    //var de estado da imagem
+    if (!isPreview) {
+        val userRepository: UserRepository = remember { RoomUserRepository(context) }
 
-    var profileBitmap by remember {
-        mutableStateOf<Bitmap>(convertByteArrayToBitmap(user!!.userImage)) }
-
-
+        LaunchedEffect(email) {
+            if (!email.isNullOrEmpty()) {
+                val fetchedUser = userRepository.getUserByEmail(email)
+                user = fetchedUser
+                fetchedUser?.userImage?.let { byteArray ->
+                    profileBitmap = convertByteArrayToBitmap(byteArray)
+                }
+            }
+        }
+    }
 
     TopAppBar(
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         title = {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ){
-                Column(){
+                Column {
                     Text(
-                        text = "Hello ${user?.name} ",
+                        text = "Hello ${user?.name ?: ""} ",
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold
-
                     )
 
                     Text(
-                        text = email,
-                        style = MaterialTheme.typography.bodySmall,
-
-                        )
+                        text = email ?: "",
+                        style = MaterialTheme.typography.bodySmall
+                    )
                 }
                 Card(
                     modifier = Modifier
@@ -86,7 +93,7 @@ fun TopAppBar(email: String? = "", navController: NavController) {
                         .size(48.dp)
                         .clickable(
                             onClick = {
-                                navController.navigate(Destination.UpdateScreen.createRoute(email))
+                                navController.navigate(Destination.UpdateScreen.createRoute(email ?: ""))
                             }
                         ),
                     shape = CircleShape,
@@ -98,25 +105,24 @@ fun TopAppBar(email: String? = "", navController: NavController) {
                         color = MaterialTheme.colorScheme.primary
                     )
                 ){
-                    Image(
-                        bitmap = profileBitmap.asImageBitmap(),
-                        contentDescription = "Profile image",
-                        modifier = Modifier.size(70.dp),
-                        contentScale = ContentScale.Crop
-                    )
+                    profileBitmap?.let { bitmap ->
+                        Image(
+                            bitmap = bitmap.asImageBitmap(),
+                            contentDescription = "Profile image",
+                            modifier = Modifier.size(70.dp),
+                            contentScale = ContentScale.Crop
+                        )
+                    }
                 }
             }
-
         }
     )
-
-
 }
 
 @Preview
 @Composable
 private fun TopAppBarPreview() {
-    BioScanTheme{
+    BioScanTheme {
         TopAppBar("", rememberNavController())
     }
 }
