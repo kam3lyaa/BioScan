@@ -73,12 +73,8 @@ fun CameraScreen(navController: NavHostController) {
                 bitmap = fotoAtual.asImageBitmap(),
                 contentDescription = "Foto tirada",
                 modifier = Modifier
-                    .shadow(
-                        elevation = 8.dp,
-                        shape = RoundedCornerShape(16.dp)
-                    )
                     .clip(RoundedCornerShape(16.dp))
-                    .size(270.dp, 360.dp)
+                    .size(240.dp, 320.dp)
             )
         }
 
@@ -95,7 +91,7 @@ fun CameraScreen(navController: NavHostController) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier
-                .padding(top = 30.dp)
+                .padding(top = 20.dp)
         ) {
             CameraButton(
                 onClick = { cameraLauncher.launch(null) }
