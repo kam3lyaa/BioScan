@@ -10,14 +10,14 @@ import br.com.fiap.bioscan.model.Plant
 interface PlantDao {
 
     @Insert
-    fun insert(plant: Plant)
+    suspend fun insert(plant: Plant)
 
     @Query("SELECT * FROM tb_plant WHERE user_id = :userId")
-    fun getPlantByUser(userId: Long): List<Plant>
+    suspend fun getPlantByUser(userId: Long): List<Plant>
 
-    @Query("SELECT * FROM tb_plant WHERE id = :plantId" )
-    fun getPlantById(plantId: Long): Plant?
+    @Query("SELECT * FROM tb_plant WHERE id = :plantId")
+    suspend fun getPlantById(plantId: Long): Plant?
 
     @Delete
-    fun delete(plant: Plant)
+    suspend fun delete(plant: Plant)
 }
