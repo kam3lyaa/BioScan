@@ -116,7 +116,7 @@ fun CameraScreen(navController: NavHostController, userEmail: String? = "") {
 
         Row(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier.padding(top = 30.dp)
+            modifier = Modifier.padding(top = 20.dp)
         ) {
             CameraButton(
                 onClick = { cameraLauncher.launch(null) }
