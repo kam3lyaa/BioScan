@@ -36,7 +36,7 @@ fun CameraButton(onClick: () -> Unit)
 {
     Button(
         modifier = Modifier
-            .height(35.dp)
+            .height(45.dp)
             .border(
                 width = 0.7.dp,
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
